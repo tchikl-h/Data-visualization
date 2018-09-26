@@ -1,0 +1,37 @@
+{
+  "name": "data-visualization",
+  "version": "1.0.0",
+  "description": "Allow a front-end visualization of datas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "magic": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tchikl-h/Data-visualization.git"
+  },
+  "author": "Hervé Tchikladzé",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tchikl-h/Data-visualization/issues"
+  },
+  "homepage": "https://github.com/tchikl-h/Data-visualization#readme",
+  "dependencies": {
+    "@material-ui/core": "^3.1.1",
+    "@material-ui/icons": "^3.0.1",
+    "@types/react": "^16.4.14",
+    "@types/react-dom": "^16.0.7",
+    "css-loader": "^1.0.0",
+    "prop-types": "^15.6.2",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "style-loader": "^0.23.0",
+    "ts-loader": "^5.2.0",
+    "typescript": "^3.2.0-dev.20180926",
+    "webpack": "^4.20.1"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.1.1"
+  }
+}
