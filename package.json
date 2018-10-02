@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "magic": "webpack"
+    "magic": "webpack",
+    "start": "node server.js",
+    "heroku-postbuild": "webpack -p"
   },
   "repository": {
     "type": "git",
