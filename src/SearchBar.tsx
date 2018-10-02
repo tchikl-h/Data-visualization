@@ -9,6 +9,9 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
   root: {
@@ -70,25 +73,51 @@ const styles = theme => ({
   },
 });
 
-class SearchAppBar extends React.Component<any> {
+class SearchAppBar extends React.Component<any, { anchorEl: any }> {
     constructor(props) {
         super(props);
+        this.state = {
+          anchorEl: null,
+        };
         this.handleFilterTextInputChange = this.handleFilterTextInputChange.bind(this);
     }
+  
+    handleClick = (event, data) => {
+      if (this.state.anchorEl === null)
+        this.setState({ anchorEl: event.currentTarget });
+      else {
+        if (data !== null)
+        this.props.onDataFetched(data)
+        this.setState({ anchorEl: null });
+      }
+    };
 
     handleFilterTextInputChange(e) {
         this.props.onFilterTextInput(e.target.value);
       }
+
     render() {
+      let items = [];
+      for (let i = 0; i < 100; i++) {
+        items.push(<MenuItem onClick={((e) => this.handleClick(e, i))}>{i}</MenuItem>);
+      }
         return (
             <div className={this.props.classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Open drawer">
+                <IconButton className={this.props.classes.menuButton} aria-owns={this.state.anchorEl ? 'simple-menu' : null} aria-haspopup="true" onClick={((e) => this.handleClick(e, null))} color="inherit" aria-label="Open drawer">
                     <MenuIcon />
+                    <Menu
+                      id="simple-menu"
+                      anchorEl={this.state.anchorEl}
+                      open={Boolean(this.state.anchorEl)}
+                      onClose={((e) => this.handleClick(e, null))}
+                    >
+                      {items}
+                    </Menu>
                 </IconButton>
                 <Typography className={this.props.classes.title} variant="title" color="inherit" noWrap>
-                    Filterable React List
+                    Data visualization
                 </Typography>
                 <div className={this.props.classes.grow} />
                 <div className={this.props.classes.search}>

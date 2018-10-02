@@ -11,7 +11,7 @@ const style = require("./List.css");
 
 type Row = string[];
 
-class ContactRow extends React.Component<{ row: Row }> {
+class RowList extends React.Component<{ row: Row }> {
   render() {
     let properRow = [];
     this.props.row.forEach(element => {
@@ -28,26 +28,29 @@ class ContactRow extends React.Component<{ row: Row }> {
   }
 }
 
-class ContactTable extends React.Component<{ relation: Array<Row>, filterText: any}> {
+class RowTable extends React.Component<{ relation: Array<Row>, filterText: any}> {
   render() {
     var rows = [];
-    console.log(this.props.relation);
     for (let i = 0; i < this.props.relation[0].length; i++) {
       let row: Row = [];
       this.props.relation.forEach(list => {
         row.push(list[i]);
-        console.log(list[i]);
       });
       if (i === 0)
-        rows.push(<b><ContactRow row={row} /></b>);
-      else {
-        rows.push(<ContactRow row={row} />);
-        // row.forEach(element => {
-        //   if (element.indexOf(this.props.filterText))
-        //     rows.push(<ContactRow row={row} />);
-        // });
-        console.log("-------------------");
-      }
+        rows.push(<b><RowList row={row} /></b>);
+        else {
+          if (!this.props.filterText) {
+            rows.push(<RowList row={row} />);
+          }
+          else {
+            row.forEach(element => {
+              if (element.indexOf(this.props.filterText) !== -1) {
+                rows.push(<RowList row={row} />);
+                return;
+              }
+            });
+          }
+        }
     }
     return (
       <table className='table'>
@@ -57,16 +60,24 @@ class ContactTable extends React.Component<{ relation: Array<Row>, filterText: a
   }
 }
 
-export default class FilterableContactTable extends React.Component<{ data: any }, { filterText: any }> {
+export default class FilterableRowTable extends React.Component<{}, { filterText: string, data: any}> {
   constructor(props) {
     super(props);
-    // FilterableContactTable is the owner of the state as the filterText is needed in both nodes (searchbar and table) that are below in the hierarchy tree.
     this.state = {
-      filterText: ''
+      filterText: '',
+      data: '',
     };
     
     this.handleFilterTextInput = this.handleFilterTextInput.bind(this);
+    this.handleResultChange = this.handleResultChange.bind(this);
+  }
     
+  componentDidMount() {
+    fetch('https://young-peak-48795.herokuapp.com/api/v1/all')
+    .then(res => res.json())
+    .then(res => {
+      this.setState({data: res[1]});
+    })
   }
 
   handleFilterTextInput(filterText) {
@@ -76,18 +87,27 @@ export default class FilterableContactTable extends React.Component<{ data: any 
     });
     //React knows the state has changed, and calls render() method again to learn what should be on the screen
   }
+
+  handleResultChange(data) {
+    fetch('https://young-peak-48795.herokuapp.com/api/v1/all')
+    .then(res => res.json())
+    .then(res => {
+      this.setState({data: res[data]});
+    })
+  }
   
   render() {
-    if (this.props.data["relation"])
-      return (<h1>The data is malformed</h1>)
+    if (!this.state.data["relation"])
+      return (<h1>Loading data...</h1>)
     return (
       <div>
         <SearchAppBar
+          onDataFetched={this.handleResultChange}
           filterText={this.state.filterText}
           onFilterTextInput={this.handleFilterTextInput}
         />
-        <ContactTable
-          relation={this.props.data["relation"]}
+        <RowTable
+          relation={this.state.data["relation"]}
           filterText={this.state.filterText}
         />
       </div>
