@@ -71,7 +71,8 @@ export default class FilterableRowTable extends React.Component<{}, { filterText
     this.handleFilterTextInput = this.handleFilterTextInput.bind(this);
     this.handleResultChange = this.handleResultChange.bind(this);
   }
-    
+
+  // this is a comment
   componentDidMount() {
     fetch('https://young-peak-48795.herokuapp.com/api/v1/all')
     .then(res => res.json())
